@@ -1,19 +1,26 @@
 import CharListItem from 'components/CharListItem';
 
-const CharList = ({ chars, nextPageUrl, page, renderPrevious, renderNext }) => {
+const CharList = ({ chars, nextPageUrl, page, isLoading, renderPrevious, renderNext }) => {
     const renderChars = chars.slice((page - 1) * 10, (page - 1) * 10 + 10).map(char => <CharListItem key={char.url} char={char} />);
 
     const handlePreviousClick = () => {
-        renderPrevious();
+        if (!isLoading)
+            renderPrevious();
     };
 
     const handleNextClick = () => {
-        renderNext();
+        if (!isLoading)
+            renderNext();
     };
 
     return (
         <div>
-            {renderChars}
+            {
+                isLoading ?
+                    <div>Loading</div>
+                    :
+                    renderChars
+            }
             <div className="row justify-content-between">
                 <div className="col-auto">
                     <button onClick={handlePreviousClick} style={{ display: page === 1 ? 'none' : '' }}>

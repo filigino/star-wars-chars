@@ -10,8 +10,10 @@ const StarWarsChars = () => {
     });
 
     const [page, setPage] = useState(1);
+    const [isLoading, setIsLoading] = useState(true);
 
     const addChars = async () => {
+        setIsLoading(true);
         console.log('fetching!'); // remove
         const res = await fetch(state.nextPageUrl);
         const data = await res.json();
@@ -20,17 +22,19 @@ const StarWarsChars = () => {
             chars: data.results,
             nextPageUrl: data.next
         });
+        setIsLoading(false);
     };
 
     useEffect(() => {
         addChars();
     }, []);
 
-    const renderPrevious = async () => {
+    const renderPrevious = () => {
         setPage(page - 1);
     };
 
     const renderNext = async () => {
+        // if no characters past current page
         if (state.chars.length <= page * 10) {
             await addChars();
         }
@@ -42,6 +46,7 @@ const StarWarsChars = () => {
             <CharList
                 {...state}
                 page={page}
+                isLoading={isLoading}
                 renderPrevious={renderPrevious}
                 renderNext={renderNext}
             />
