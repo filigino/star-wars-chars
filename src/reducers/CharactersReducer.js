@@ -1,8 +1,8 @@
 const reducer = (state, action) => {
     switch (action.type) {
-        case 'ADD_CHARS':
+        case 'ADD_CHARACTERS':
             return {
-                chars: [...state.chars, ...action.chars],
+                characters: [...state.characters, ...action.characters],
                 nextPageUrl: action.nextPageUrl
             };
         default:

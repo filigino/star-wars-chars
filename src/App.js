@@ -1,8 +1,23 @@
-import StarWarsChars from 'components/StarWarsChars';
+import { BrowserRouter, Redirect, Route, Switch } from 'react-router-dom';
+import CharacterList from 'components/CharacterList';
+import Character from 'components/Character';
 
 const App = () => {
     return (
-        <StarWarsChars />
+        <BrowserRouter>
+            <Switch>
+                <Route exact path="/">
+                    <CharacterList />
+                </Route>
+                <Route exact path="/:id">
+                    <Character />
+                </Route>
+                <Route>
+                    <Redirect to="/" />
+                </Route>
+            </Switch>
+        </BrowserRouter>
+
     );
 };
 

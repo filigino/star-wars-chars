@@ -1,24 +1,24 @@
-const CharListItem = ({ char }) => {
+const CharacterListItem = ({ character }) => {
     return (
         <div
             className="row"
-            onClick={() => alert(char.name)}
+            onClick={() => alert(character.name)}
             style={{ backgroundColor: 'lightgray', borderRadius: '10px', cursor: 'pointer', marginBottom: '5px' }}
         >
             <div className="col-3">
-                {char.name}
+                {character.name}
             </div>
             <div className="col-3">
-                {char.birth_year}
+                {character.birth_year}
             </div>
             <div className="col-3">
-                {char.height} cm
+                {character.height} cm
             </div>
             <div className="col-3">
-                {char.mass} kg
+                {character.mass} kg
             </div>
         </div>
     );
 };
 
-export default CharListItem;
+export default CharacterListItem;
