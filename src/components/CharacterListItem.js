@@ -1,8 +1,12 @@
+import { Link } from 'react-router-dom';
+
 const CharacterListItem = ({ character }) => {
+    const cleanedUrl = character.url.slice(0, character.url.length - 1);
+    const _id = cleanedUrl.slice(cleanedUrl.lastIndexOf('/') + 1);
     return (
-        <div
+        <Link
+            to={`/character/${_id}`}
             className="row"
-            onClick={() => alert(character.name)}
             style={{ backgroundColor: 'lightgray', borderRadius: '10px', cursor: 'pointer', marginBottom: '5px' }}
         >
             <div className="col-3">
@@ -17,7 +21,7 @@ const CharacterListItem = ({ character }) => {
             <div className="col-3">
                 {character.mass} kg
             </div>
-        </div>
+        </Link>
     );
 };
 

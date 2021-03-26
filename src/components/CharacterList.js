@@ -1,50 +1,62 @@
 import { useEffect, useReducer, useState } from 'react';
-import reducer from 'reducers/CharactersReducer';
+import { useLocation } from 'react-router-dom';
+import reducer from 'reducers/CharacterReducer';
 import apiUrl from 'apiUrl';
 import CharacterListItem from 'components/CharacterListItem';
 import useStyles from 'styles/CharacterListStyles';
 
 const CharacterList = () => {
-    const [state, dispatch] = useReducer(reducer, {
-        characters: [],
-        nextPageUrl: `${apiUrl}people/`
-    });
+    const location = useLocation();
 
-    const [page, setPage] = useState(1);
+    const [state, dispatch] = useReducer(reducer, { characters: [] });
+
+    const [page, setPage] = useState(location.state || 1);
+    const [offset, setOffset] = useState((location.state || 1) - 1);
     const [isLoading, setIsLoading] = useState(true);
 
     const classes = useStyles({
-        length: state.characters.length, nextPageUrl: state.nextPageUrl, page
+        length: state.characters.length, page
     });
 
     useEffect(() => {
-        addCharacters();
+        const load = async () => {
+            const res = await fetch(`${apiUrl}people/${page === 1 ? '' : `?page=${page}`}`);
+            const data = await res.json();
+            dispatch({
+                type: 'ADD_NEXT',
+                characters: data.results
+            });
+            setIsLoading(false);
+        };
+        load();
     }, []);
 
-    const addCharacters = async () => {
+    const addCharacters = async (next = true) => {
         setIsLoading(true);
-        const res = await fetch(state.nextPageUrl);
+        const res = await fetch(`${apiUrl}people/?page=${page + (next ? 1 : -1)}`);
         const data = await res.json();
         dispatch({
-            type: 'ADD_CHARACTERS',
-            characters: data.results,
-            nextPageUrl: data.next
+            type: next ? 'ADD_NEXT' : 'ADD_PREVIOUS',
+            characters: data.results
         });
         setIsLoading(false);
     };
 
-    const turnPage = async (prev = false) => {
+    const turnPage = async (next = true) => {
         // if no characters past current page
-        if (!prev && state.characters.length <= page * 10) {
+        if (next && state.characters.length <= page * 10) {
             await addCharacters();
+        } else if (!next && page - offset - 1 === 0) {
+            await addCharacters(false);
+            setOffset(offset - 1);
         }
-        const inc = prev ? -1 : 1;
+        const inc = next ? 1 : -1;
         setPage(page + inc);
     };
 
     const handlePreviousClick = () => {
         if (!isLoading)
-            turnPage(true);
+            turnPage(false);
     };
 
     const handleNextClick = () => {
@@ -53,7 +65,7 @@ const CharacterList = () => {
     };
 
     const renderCharacters = state.characters.slice(
-        (page - 1) * 10, (page - 1) * 10 + 10
+        (page - offset - 1) * 10, (page - offset - 1) * 10 + 10
     ).map(character =>
         <CharacterListItem key={character.url} character={character} />
     );
@@ -69,7 +81,7 @@ const CharacterList = () => {
             <div className="row justify-content-between">
                 <div className="col-auto">
                     <button
-                        className={classes.prevButton}
+                        className={classes.previousButton}
                         onClick={handlePreviousClick}
                     >
                         Previous

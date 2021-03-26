@@ -9,7 +9,7 @@ const App = () => {
                 <Route exact path="/">
                     <CharacterList />
                 </Route>
-                <Route exact path="/:id">
+                <Route exact path="/character/:id">
                     <Character />
                 </Route>
                 <Route>
@@ -17,7 +17,6 @@ const App = () => {
                 </Route>
             </Switch>
         </BrowserRouter>
-
     );
 };
 
