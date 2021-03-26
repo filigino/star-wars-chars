@@ -4,21 +4,24 @@ import apiUrl from 'apiUrl';
 
 const Character = () => {
     const { id } = useParams();
+    const PAGE = Math.ceil((id <= 16 ? id : id - 1) / 10);
     const [data, setData] = useState({});
+    const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
         const load = async () => {
             const res = await fetch(`${apiUrl}people/${id}/`);
             const data = await res.json();
             setData(data);
+            setIsLoading(false);
         };
         load();
-    }, [])
+    }, [id])
     return (
         <>
             <Link to={{
                 pathname: '/',
-                state: 3
+                state: PAGE
             }}>
                 Back
             </Link>
