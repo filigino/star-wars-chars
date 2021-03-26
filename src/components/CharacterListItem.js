@@ -18,10 +18,12 @@ const CharacterListItem = ({ character }) => {
                     {name}
                 </div>
                 <div className="col-12 col-md-3">
-                    Birth year: {birth_year}
+                    {/* Birth year: {birth_year} */}
+                    {character.homeworld}
                 </div>
                 <div className="col-12 col-md-3">
-                    Height: {height}
+                    {/* Height: {height} */}
+                    {character.films}
                 </div>
                 <div className="col-12 col-md-3">
                     Mass: {mass}

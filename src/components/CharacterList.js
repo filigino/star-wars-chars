@@ -96,7 +96,11 @@ const CharacterList = () => {
                     <img className={classes.logo} src={logo} alt="" />
                     <div className={classes.title}>Character List</div>
                 </div>
-                <div className={`d-flex flex-column justify-content-between mb-3 ${classes.list}`}>
+                <div className={`d-flex flex-column mb-3 ${isLoading ?
+                    'justify-content-center align-items-center'
+                    :
+                    'justify-content-between'
+                    } ${classes.list}`}>
                     {
                         isLoading ?
                             <Loading />

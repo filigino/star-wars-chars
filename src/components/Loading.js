@@ -1,6 +1,8 @@
 const Loading = () => {
     return (
-        <div>Loading...</div>
+        <div className="spinner-border text-warning" role="status">
+            <span></span>
+        </div>
     );
 };
 
