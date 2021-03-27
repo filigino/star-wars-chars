@@ -7,6 +7,12 @@ React app that displays list of Star Wars characters pulled from ([SWAPI](https:
 - Utilizes React Router, Bootstrap, and React-JSS
 - Uses pagination
 
+## Instructions
+
+- After downloading the source code:
+  - Run **npm i** to install required Node modules
+  - Run **npm start** to run app
+
 ## How It Works
 
 - Character list is stored using reducer since it is complex (objects with many sub-values) and next state depends on current state (i.e., when appending more characters to list)
