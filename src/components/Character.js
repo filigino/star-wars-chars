@@ -6,98 +6,84 @@ import useStyles from 'styles/CharacterStyles';
 
 const Character = () => {
     const { id } = useParams();
+    // calculate page based on id
+    // offset by 1 after id 16 since id 17 is skipped
     const PAGE = Math.ceil((id <= 16 ? id : id - 1) / 10);
     const [data, setData] = useState({});
     const [isLoading, setIsLoading] = useState(true);
     const {
-        name, height, mass, hair_color, skin_color, eye_color, birth_year,
+        name, hair_color, skin_color, eye_color, birth_year,
         gender, homeworld, films, species, vehicles, starships
     } = data;
+
+    let height = data.height === 'unknown' ? data.height : `${data.height} cm`
+    let mass = data.mass === 'unknown' ? data.mass : `${data.mass} kg`
 
     const classes = useStyles();
 
     useEffect(() => {
         const load = async () => {
-            let res = await fetch(`${apiUrl}people/${id}/`);
+            const res = await fetch(`${apiUrl}people/${id}/`);
             let characterData = await res.json();
 
-            res = await fetch(characterData.homeworld);
-            let data = await res.json();
-            const homeworld = data.name;
-
-            let urls = []
-            for (const url of characterData.films) {
-                urls.push(fetch(url));
-            }
-            res = await Promise.allSettled(urls);
-            for (let i = 0; i < urls.length; i++) {
-                urls[i] = await res[i].value.json();
-            }
-            res = await Promise.allSettled(urls);
-            const films = [];
-            for (const film of res) {
-                films.push(film.value.title);
+            const loadOne = async () => {
+                const res = await fetch(characterData.homeworld);
+                const data = await res.json();
+                return data.name;
             }
 
-            urls = [];
-            for (const url of characterData.species) {
-                urls.push(fetch(url));
-            }
-            res = await Promise.allSettled(urls);
-            for (let i = 0; i < urls.length; i++) {
-                urls[i] = await res[i].value.json();
-            }
-            res = await Promise.allSettled(urls);
-            const species = [];
-            for (const speciesType of res) {
-                species.push(speciesType.value.title);
-            }
+            const loadNumerous = async (prop, name) => {
+                const urls = []
+                for (const url of characterData[prop]) {
+                    urls.push(fetch(url));
+                }
+                let res = await Promise.allSettled(urls);
+                for (let i = 0; i < urls.length; i++) {
+                    urls[i] = await res[i].value.json();
+                }
+                res = await Promise.allSettled(urls);
+                const result = [];
+                for (const element of res) {
+                    result.push(element.value[name]);
+                }
+                return result;
+            };
 
-            urls = [];
-            for (const url of characterData.vehicles) {
-                urls.push(fetch(url));
-            }
-            res = await Promise.allSettled(urls);
-            for (let i = 0; i < urls.length; i++) {
-                urls[i] = await res[i].value.json();
-            }
-            res = await Promise.allSettled(urls);
-            const vehicles = [];
-            for (const vehicle of res) {
-                vehicles.push(vehicle.value.name);
-            }
+            const homeworld = loadOne();
+            const films = loadNumerous('films', 'title');
+            const species = loadNumerous('species', 'name');
+            const vehicles = loadNumerous('vehicles', 'name');
+            const starships = loadNumerous('starships', 'name');
 
-            urls = [];
-            for (const url of characterData.starships) {
-                urls.push(fetch(url));
-            }
-            res = await Promise.allSettled(urls);
-            for (let i = 0; i < urls.length; i++) {
-                urls[i] = await res[i].value.json();
-            }
-            res = await Promise.allSettled(urls);
-            const starships = [];
-            for (const starship of res) {
-                starships.push(starship.value.name);
-            }
+            const data = await Promise.allSettled([homeworld, films, species, vehicles, starships]);
 
-            characterData = { ...characterData, homeworld, films, species, vehicles, starships };
+            characterData = {
+                ...characterData,
+                homeworld: data[0].value,
+                films: data[1].value,
+                species: data[2].value,
+                vehicles: data[3].value,
+                starships: data[4].value
+            };
 
             setData(characterData);
             setIsLoading(false);
         };
         load();
-    }, [id])
+    }, [id]);
 
     return (
         <div className={classes.root}>
             <div className="container">
-                <div className="d-flex justify-content-between">
-                    <Link to={{
-                        pathname: '/',
-                        state: PAGE
-                    }}>
-                        Back
+                <div className="d-flex justify-content-between mb-3">
+                    <Link
+                        to={{
+                            pathname: '/',
+                            state: PAGE
+                        }}
+                        className={classes.back}
+                    >
+                        {'<-'}
                     </Link>
                     {!isLoading &&
                         <div className={classes.name}>
@@ -115,10 +101,10 @@ const Character = () => {
                             :
                             <div>
                                 <div>
-                                    Height: {height} cm
+                                    Height: {height}
                                 </div>
                                 <div>
-                                    Mass: {mass} kg
+                                    Mass: {mass}
                                 </div>
                                 <div>
                                     Hair color: {hair_color}

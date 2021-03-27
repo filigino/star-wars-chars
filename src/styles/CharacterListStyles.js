@@ -19,7 +19,8 @@ const useStyles = createUseStyles({
     },
     button: {
         backgroundColor: 'gray',
-        borderRadius: '0.5em'
+        borderRadius: '0.5em',
+        borderWidth: 0
     },
     previousButton: {
         visibility: props => props.isFirstPage ? 'hidden' : 'visible'

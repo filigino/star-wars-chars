@@ -20,10 +20,11 @@ const CharacterList = () => {
     const [offset, setOffset] = useState(INITIAL_PAGE);
     const [count, setCount] = useState(0);
     const [isLoading, setIsLoading] = useState(true);
+    let isLastPage = page === Math.ceil(count / 10);
 
     const classes = useStyles({
         isFirstPage: page === 1,
-        isLastPage: page === Math.ceil(count / 10)
+        isLastPage
     });
 
     useEffect(() => {
@@ -99,7 +100,7 @@ const CharacterList = () => {
                 <div className={`d-flex flex-column mb-3 ${isLoading ?
                     'justify-content-center align-items-center'
                     :
-                    'justify-content-between'
+                    isLastPage ? '' : 'justify-content-between'
                     } ${classes.list}`}>
                     {
                         isLoading ?

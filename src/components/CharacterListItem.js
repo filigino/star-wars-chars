@@ -6,8 +6,8 @@ const CharacterListItem = ({ character }) => {
     const _id = cleanedUrl.slice(cleanedUrl.lastIndexOf('/') + 1);
     const { name } = character;
     const birth_year = character.birth_year === 'unknown' ? 'Unknown' : character.birth_year;
-    const height = character.height === 'unknown' ? 'Unknown' : `${character.height} cm`;
-    const mass = character.mass === 'unknown' ? 'Unknown' : `${character.mass} kg`;
+    const height = character.height === 'unknown' ? character.height : `${character.height} cm`;
+    const mass = character.mass === 'unknown' ? character.mass : `${character.mass} kg`;
 
     const classes = useStyles();
 
@@ -18,12 +18,10 @@ const CharacterListItem = ({ character }) => {
                     {name}
                 </div>
                 <div className="col-12 col-md-3">
-                    {/* Birth year: {birth_year} */}
-                    {character.homeworld}
+                    Birth year: {birth_year}
                 </div>
                 <div className="col-12 col-md-3">
-                    {/* Height: {height} */}
-                    {character.films}
+                    Height: {height}
                 </div>
                 <div className="col-12 col-md-3">
                     Mass: {mass}
