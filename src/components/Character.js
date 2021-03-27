@@ -16,8 +16,16 @@ const Character = () => {
         gender, homeworld, films, species, vehicles, starships
     } = data;
 
-    let height = data.height === 'unknown' ? data.height : `${data.height} cm`
-    let mass = data.mass === 'unknown' ? data.mass : `${data.mass} kg`
+    const height = data.height === 'unknown' ? data.height : `${data.height} cm`
+    const mass = data.mass === 'unknown' ? data.mass : `${data.mass} kg`
+    const renderList = list => {
+        let str = '';
+        for (let i = 0; i < list.length - 1; i++) {
+            str += `${list[i]}, `
+        }
+        str += list[list.length - 1];
+        return str;
+    };
 
     const classes = useStyles();
 
@@ -125,17 +133,23 @@ const Character = () => {
                                     Homeworld: {homeworld}
                                 </div>
                                 <div>
-                                    Films: {films}
+                                    Films: {renderList(films)}
                                 </div>
-                                <div>
-                                    Species: {species}
-                                </div>
-                                <div>
-                                    Vehicles: {vehicles}
-                                </div>
-                                <div>
-                                    Starships: {starships}
-                                </div>
+                                {species.length > 0 &&
+                                    <div>
+                                        Species: {renderList(species)}
+                                    </div>
+                                }
+                                {vehicles.length > 0 &&
+                                    <div>
+                                        Vehicles: {renderList(vehicles)}
+                                    </div>
+                                }
+                                {starships.length > 0 &&
+                                    <div>
+                                        Starships: {renderList(starships)}
+                                    </div>
+                                }
                             </div>
                     }
                 </div>
